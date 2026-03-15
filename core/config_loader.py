@@ -68,6 +68,18 @@ def load_config(path: str | None = None) -> NotifyConfig:
     with open(path, encoding="utf-8") as f:
         data = yaml.safe_load(f)
 
+    # Resolve log_file relative to config file if it's relative
+    config_dir = Path(path).parent
+    log_file_raw = data.get("log_file", None)
+    if log_file_raw:
+        log_file_path = Path(log_file_raw)
+        if not log_file_path.is_absolute():
+            log_file = str(config_dir / log_file_path)
+        else:
+            log_file = log_file_raw
+    else:
+        log_file = None
+
     servers: list[ServerPollConfig] = []
     for s in data.get("servers", []):
         tools = [
@@ -88,5 +100,5 @@ def load_config(path: str | None = None) -> NotifyConfig:
         poll_interval=int(data.get("poll_interval", 30)),
         servers=servers,
         debug=bool(data.get("debug", False)),
-        log_file=data.get("log_file", None),
+        log_file=log_file,
     )

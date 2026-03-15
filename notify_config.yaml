@@ -16,7 +16,7 @@ poll_interval: 15
 
 # Debug mode: logs every poll cycle to a file.
 debug: true
-log_file: "D:\\DEV\\mcp\\universai\\orchestra\\Agent_notify\\agent_notify.log"
+log_file: "agent_notify.log"
 
 servers:
   # ── Telegram ──────────────────────────────────────────────────
