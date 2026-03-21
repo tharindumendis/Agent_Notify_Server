@@ -90,7 +90,7 @@ class Poller:
                     )
                     
                     import sys
-                    print(f"[DEBUG] Outcome of '{tool_cfg.name}' on '{server.name}': {result}", file=sys.stderr)
+                    # print(f"[DEBUG] Outcome of '{tool_cfg.name}' on '{server.name}': {result}", file=sys.stderr)
 
                     # Extract the text payload from the MCP result
                     new_data: str | None = None
