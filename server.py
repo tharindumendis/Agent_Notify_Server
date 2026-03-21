@@ -161,6 +161,7 @@ async def get_notifications(ctx: Context) -> str:
                                      and e.get("tool") == tool_cfg.name),
                                     None
                                 )
+                                log.debug("  [%s] %s", key, match)
                                 if match and "error" in match:
                                     log.warning("  [%s] ERROR: %s", key, match["error"])
                                 elif match:
@@ -202,6 +203,32 @@ async def get_notifications(ctx: Context) -> str:
 
 def main() -> None:
     """Entry point for `agent-notify` CLI command."""
+    if "--help" in sys.argv:
+        print("Usage: agent-notify [--help] [--test]")
+        print("Runs the Agent_notify MCP server.")
+        print()
+        print("Options:")
+        print("  --help    Show this message and exit")
+        print("  --test    Run get_notifications() tool locally for testing configuration and logs")
+        return
+
+    if "--test" in sys.argv:
+        print("Running in TEST mode (calling get_notifications)...")
+        
+        class MockContext:
+            async def info(self, msg):
+                print(f"NOTIFY INFO: {msg}")
+            async def warning(self, msg):
+                print(f"NOTIFY WARNING: {msg}")
+            async def error(self, msg):
+                print(f"NOTIFY ERROR: {msg}")
+
+        try:
+            asyncio.run(get_notifications(MockContext()))  # type: ignore
+        except KeyboardInterrupt:
+            print("\nTest mode stopped by user.")
+        return
+
     mcp.run(transport="stdio")
 
 
